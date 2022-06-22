@@ -1,24 +1,13 @@
-import { contextBridge, ipcRenderer } from 'electron'
+import { contextBridge, ipcRenderer } from "electron";
+import { Store } from "../src/utilities/store";
 
 export const api = {
-  /**
-   * Here you can expose functions to the renderer process
-   * so they can interact with the main (electron) side
-   * without security problems.
-   *
-   * The function below can accessed using `window.Main.sendMessage`
-   */
-
-  sendMessage: (message: string) => {
-    ipcRenderer.send('message', message)
+  store: {
+    get: () => ipcRenderer.sendSync("store-get"),
+    set: (store: Store) => ipcRenderer.sendSync("store-set", store),
   },
+  getSoundsPath: (filename: string) =>
+    ipcRenderer.sendSync("getSoundsPath", filename),
+};
 
-  /**
-   * Provide an easier way to listen to events
-   */
-  on: (channel: string, callback: Function) => {
-    ipcRenderer.on(channel, (_, data) => callback(data))
-  }
-}
-
-contextBridge.exposeInMainWorld('Main', api)
+contextBridge.exposeInMainWorld("Main", api);
