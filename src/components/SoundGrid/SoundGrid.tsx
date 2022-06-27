@@ -5,34 +5,28 @@ import {
   Space,
   Stack,
 } from "@neurotech/elements";
-import styled from "styled-components";
 import { SoundEntity } from "../../App";
-import { palette } from "../../styles/palette";
 import { ValidKeys } from "../../ValidKeys";
 import { SoundTile } from "../SoundTile/SoundTile";
 import chunk from "lodash.chunk";
 import { EmptySoundTile } from "../SoundTile/EmptySoundTile";
+import { Panel } from "../Panel/Panel";
+import { SoundForm } from "../Dialog/SoundDialog/SoundDialog";
 
 interface SoundGridProps {
   activeSound: string;
-  playSound: (path: string, id: string) => void;
+  handleOpenSoundDialog: (open: boolean) => void;
+  playSound: (path: string, id: string, volume?: number, rate?: number) => void;
+  setSoundDialogForm: (soundForm: SoundForm | null) => void;
+  soundDialogForm: SoundForm | null | undefined;
   sounds: SoundEntity[];
 }
 
-const Container = styled.div`
-  background-color: ${palette.gray.default};
-  border: 1px solid ${palette.gray.light};
-  border-radius: 4px;
-  margin-left: 0.5rem;
-  padding: 1rem;
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-`;
-
 export const SoundGrid = ({
   activeSound,
+  handleOpenSoundDialog,
   playSound,
+  setSoundDialogForm,
   sounds,
 }: SoundGridProps) => {
   const paginated = chunk(ValidKeys, 6);
@@ -48,19 +42,34 @@ export const SoundGrid = ({
           isActive={activeSound === sound.id}
           description={sound.description}
           key={itemIndex}
-          onClick={() => playSound(sound.path, sound.id)}
+          onClick={() =>
+            playSound(sound.path, sound.id, sound.volume, sound.rate)
+          }
+          onRightClick={() => {
+            handleOpenSoundDialog(true);
+            setSoundDialogForm({ open: true, ...sound });
+          }}
           name={sound.name}
           shortcutKey={sound.shortcutKey}
           color={sound.color}
         />
       );
     } else {
-      return <EmptySoundTile key={itemIndex} shortcutKey={shortcutKey} />;
+      return (
+        <EmptySoundTile
+          key={itemIndex}
+          onClick={() => {
+            handleOpenSoundDialog(true);
+            setSoundDialogForm({ open: true, shortcutKey });
+          }}
+          shortcutKey={shortcutKey}
+        />
+      );
     }
   };
 
   return (
-    <Container>
+    <Panel flex marginLeft={0.5}>
       <Stack>
         {paginated.map((page, pageIndex) => {
           return (
@@ -84,25 +93,6 @@ export const SoundGrid = ({
           );
         })}
       </Stack>
-    </Container>
+    </Panel>
   );
 };
-
-/*      <Columns
-        space={Space.XSmall}
-        justifyContent={JustifyContent.SpaceBetween}
-      >
-        {sounds.map((sound) => (
-          <Column columnWidth={"16.5%"} key={sound.id}>
-            <SoundTile
-              id={sound.id}
-              isActive={activeSound === sound.id}
-              description={sound.description}
-              onClick={() => playSound(sound.path, sound.id)}
-              name={sound.name}
-              shortcutKey={sound.shortcutKey}
-              color={sound.color}
-            />
-          </Column>
-        ))}
-      </Columns> */

@@ -8,6 +8,7 @@ type SoundTileProps = Pick<
 > & {
   isActive: boolean;
   onClick: () => void;
+  onRightClick: () => void;
 };
 
 const getTileShadow = ({
@@ -36,6 +37,7 @@ const Tile = styled.button<Pick<SoundTileProps, "color" | "isActive">>`
     getTileShadow({ color: props.color, isActive: props.isActive })};
   color: ${palette.gray.bright};
   font-size: 18px;
+  height: 200px;
   padding: 0.5rem;
   display: flex;
   flex-direction: column;
@@ -84,10 +86,16 @@ export const SoundTile = ({
   description,
   isActive,
   onClick,
+  onRightClick,
   name,
   shortcutKey,
 }: SoundTileProps) => (
-  <Tile color={color} isActive={isActive} onClick={onClick}>
+  <Tile
+    color={color}
+    isActive={isActive}
+    onClick={onClick}
+    onContextMenu={onRightClick}
+  >
     <SoundName color={color}>{name}</SoundName>
     <SoundDescription>{description}</SoundDescription>
     <SoundShortcutKey color={color}>{shortcutKey}</SoundShortcutKey>

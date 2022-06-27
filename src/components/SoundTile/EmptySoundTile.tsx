@@ -2,7 +2,9 @@ import styled from "styled-components";
 import { SoundEntity } from "../../App";
 import { palette } from "../../styles/palette";
 
-type EmptySoundTileProps = Pick<SoundEntity, "shortcutKey">;
+type EmptySoundTileProps = Pick<SoundEntity, "shortcutKey"> & {
+  onClick: () => void;
+};
 
 const Tile = styled.button`
   background-color: ${palette.gray.lighter}40;
@@ -18,11 +20,16 @@ const Tile = styled.button`
   user-select: none;
   text-shadow: 1px 1px 0 ${palette.gray.darker};
   flex: 1;
+  outline: none;
 
   :hover {
     background-color: ${palette.gray.lighter};
     color: white;
     cursor: pointer;
+  }
+
+  :hover :first-of-type {
+    color: white;
   }
 
   :active {
@@ -42,8 +49,11 @@ const SoundShortcutKey = styled.div`
   text-transform: uppercase;
 `;
 
-export const EmptySoundTile = ({ shortcutKey }: EmptySoundTileProps) => (
-  <Tile>
+export const EmptySoundTile = ({
+  onClick,
+  shortcutKey,
+}: EmptySoundTileProps) => (
+  <Tile onClick={onClick}>
     <SoundShortcutKey>{shortcutKey}</SoundShortcutKey>
   </Tile>
 );

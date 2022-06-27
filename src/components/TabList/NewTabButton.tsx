@@ -3,7 +3,7 @@ import { palette } from "../../styles/palette";
 import { Plus } from "../Icons/Plus";
 
 interface AddTabButtonProps {
-  handleAddTab: () => void;
+  onClick: () => void;
 }
 
 const StyledButton = styled.button`
@@ -15,6 +15,7 @@ const StyledButton = styled.button`
   display: flex;
   padding: 0.25rem 0;
   justify-content: center;
+  outline: 0;
 
   :hover {
     background-color: ${palette.gray.lighter};
@@ -25,8 +26,8 @@ const StyledButton = styled.button`
     color 0.12s;
 `;
 
-export const AddTabButton = ({ handleAddTab }: AddTabButtonProps) => (
-  <StyledButton onClick={() => handleAddTab()}>
+export const AddTabButton = ({ onClick }: AddTabButtonProps) => (
+  <StyledButton onClick={onClick}>
     <Plus />
   </StyledButton>
 );
