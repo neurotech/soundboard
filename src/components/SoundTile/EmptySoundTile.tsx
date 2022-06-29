@@ -12,7 +12,7 @@ const Tile = styled.button`
   border: 1px solid ${palette.gray.lighter}80;
   color: ${palette.gray.bright};
   font-size: 18px;
-  height: 145px;
+  height: 160px;
   padding: 0.5rem;
   display: flex;
   flex-direction: column;

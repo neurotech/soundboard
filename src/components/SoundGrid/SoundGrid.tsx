@@ -70,7 +70,7 @@ export const SoundGrid = ({
 
   return (
     <Panel flex marginLeft={0.5}>
-      <Stack>
+      <Stack space={Space.XSmall}>
         {paginated.map((page, pageIndex) => {
           return (
             <Columns

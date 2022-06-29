@@ -37,7 +37,7 @@ const Tile = styled.button<Pick<SoundTileProps, "color" | "isActive">>`
     getTileShadow({ color: props.color, isActive: props.isActive })};
   color: ${palette.gray.bright};
   font-size: 18px;
-  height: 145px;
+  height: 160px;
   padding: 0.5rem;
   display: flex;
   flex-direction: column;
