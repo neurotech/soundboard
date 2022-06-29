@@ -65,6 +65,7 @@ const Tile = styled.button<Pick<SoundTileProps, "color" | "isActive">>`
 const SoundName = styled.div<Pick<SoundTileProps, "color">>`
   color: ${(props) => palette[props.color].default};
   font-weight: 600;
+  text-align: left;
 `;
 const SoundDescription = styled.div`
   margin-top: 0.25rem;
@@ -72,6 +73,7 @@ const SoundDescription = styled.div`
   font-size: 80%;
   color: #909194;
   flex: 1;
+  text-align: left;
   text-shadow: none;
 `;
 const SoundShortcutKey = styled.div<Pick<SoundTileProps, "color">>`

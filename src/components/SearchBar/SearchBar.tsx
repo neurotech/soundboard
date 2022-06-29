@@ -1,4 +1,5 @@
-import { KeyboardEvent, useState } from "react";
+import { KeyboardEvent, useEffect, useState } from "react";
+import styled from "styled-components";
 import { SoundEntity } from "../../App";
 import { TabEntity } from "../../utilities/store";
 import { Input } from "../Input";
@@ -9,18 +10,20 @@ interface SearchBarProps {
   handleTabChange: (id: string) => void;
   searchResults: SoundEntity[];
   searchValue: string;
-  setHushed: (hushed: boolean) => void;
   setSearchResults: (searchResults: SoundEntity[]) => void;
   setSearchValue: (searchValue: string) => void;
   tabsList: TabEntity[];
   playSound: (path: string, id: string, volume?: number, rate?: number) => void;
 }
 
+const Container = styled.div`
+  flex: 1;
+`;
+
 export const SearchBar = ({
   handleTabChange,
   searchResults,
   searchValue,
-  setHushed,
   setSearchResults,
   setSearchValue,
   tabsList,
@@ -97,19 +100,23 @@ export const SearchBar = ({
     }
   };
 
+  useEffect(() => {
+    if (searchResults.length > 0) {
+      setSelectedItem(0);
+    }
+  }, [searchResults]);
+
   return (
-    <>
-      <Panel>
+    <Container>
+      <Panel flex>
         <Input
           id={"search-bar"}
           onBlur={() => {
             setSearchResults([]);
-            setHushed(false);
           }}
           onChange={handleSearchInput}
           onFocus={() => {
             handleSearchInput(searchValue);
-            setHushed(true);
           }}
           onKeyDown={handleKeyDown}
           placeholder={"Search"}
@@ -122,6 +129,6 @@ export const SearchBar = ({
           selectedItem={selectedItem}
         />
       )}
-    </>
+    </Container>
   );
 };

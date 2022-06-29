@@ -6,6 +6,7 @@ interface PanelProps {
   children: ReactNode;
   flex?: boolean;
   isActive?: boolean;
+  justifyContent?: string;
   marginBottom?: number;
   marginLeft?: number;
   marginRight?: number;
@@ -17,6 +18,7 @@ const StyledPanel = styled.div<
     PanelProps,
     | "flex"
     | "isActive"
+    | "justifyContent"
     | "marginBottom"
     | "marginLeft"
     | "marginRight"
@@ -46,12 +48,14 @@ const StyledPanel = styled.div<
   display: flex;
   flex-direction: column;
   flex: ${(props) => (props.flex ? "1" : "unset")};
+  justify-content: ${(props) => props.justifyContent || "unset"};
 `;
 
 export const Panel = ({
   children,
   flex,
   isActive,
+  justifyContent,
   marginBottom,
   marginLeft,
   marginRight,
@@ -60,6 +64,7 @@ export const Panel = ({
   <StyledPanel
     isActive={isActive}
     flex={flex}
+    justifyContent={justifyContent}
     marginBottom={marginBottom}
     marginLeft={marginLeft}
     marginRight={marginRight}

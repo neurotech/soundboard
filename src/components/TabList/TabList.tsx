@@ -91,10 +91,6 @@ export const TabList = ({
         <AddTabButton
           onClick={() => {
             handleOpenNewTabDialog(true);
-            setTabDialogForm({
-              name: undefined,
-              open: true,
-            });
           }}
         />
       </Panel>

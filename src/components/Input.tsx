@@ -11,6 +11,7 @@ interface InputProps {
   onChange: (value: string) => void;
   onKeyDown?: (event: KeyboardEvent<HTMLInputElement>) => void;
   placeholder?: string;
+  type?: "text" | "password";
   value: string;
 }
 
@@ -52,6 +53,7 @@ export const Input = ({
   onFocus,
   onKeyDown,
   placeholder,
+  type = "text",
   value,
 }: InputProps) => (
   <InputContainer>
@@ -64,7 +66,7 @@ export const Input = ({
       onFocus={onFocus}
       onKeyDown={(event) => onKeyDown && onKeyDown(event)}
       placeholder={placeholder}
-      type={"text"}
+      type={type}
       value={value}
     />
   </InputContainer>

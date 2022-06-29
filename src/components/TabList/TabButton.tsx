@@ -29,7 +29,7 @@ export const TabButton = styled.button<{ isActive: boolean }>`
     props.isActive ? "" : `inset 0 1px 0 ${palette.gray.lighter}`};
   color: ${(props) => (props.isActive ? palette.yellow.lighter : "white")};
   font-size: 14px;
-  padding: 0.5rem;
+  padding: 0.25rem 0.5rem;
   user-select: none;
   text-shadow: 1px 1px 0 ${palette.gray.darker};
   text-align: left;
@@ -37,10 +37,10 @@ export const TabButton = styled.button<{ isActive: boolean }>`
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  min-height: 2.85rem;
   outline: none;
   text-overflow: ellipsis;
   min-width: 0;
+  min-height: 2.3rem;
 
   :hover {
     ${(props) => (props.isActive ? activeTab : activeTabHover)};

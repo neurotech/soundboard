@@ -16,6 +16,13 @@ export interface Store {
   volume: number;
 }
 
+export interface S3Config {
+  bucketName: string;
+  awsRegion: string;
+  accessKeyId: string;
+  secretAccessKey: string;
+}
+
 const defaultTabID = shortUUID.generate();
 
 export const storeDefaults: Store = {
@@ -31,6 +38,13 @@ export const storeDefaults: Store = {
     },
   ],
   volume: 1,
+};
+
+export const s3StoreDefaults: S3Config = {
+  bucketName: "",
+  awsRegion: "",
+  accessKeyId: "",
+  secretAccessKey: "",
 };
 
 export const getStore = async () => await window.Main.store.get();

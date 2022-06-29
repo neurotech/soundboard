@@ -16,6 +16,8 @@ import {
   SoundDialog,
   SoundForm,
 } from "./components/Dialog/SoundDialog/SoundDialog";
+import { ConfigDialog } from "./components/Dialog/ConfigDialog/ConfigDialog";
+import { ConfigButton } from "./components/Dialog/ConfigDialog/ConfigButton";
 
 export const ColorKeys = [
   "red",
@@ -47,6 +49,11 @@ const Container = styled.div`
   flex-direction: column;
   flex: 1;
   padding: 0.5rem;
+  justify-content: flex-start;
+`;
+
+const HeaderContainer = styled.div`
+  display: flex;
 `;
 
 const Filter = styled.div<{ isActive: boolean }>`
@@ -66,9 +73,7 @@ export const App = () => {
   const [activeTab, setActiveTab] = useState<string>(store.get().activeTab);
   const [activeSound, setActiveSound] = useState<string>("");
   const [player, setPlayer] = useState<Howl | null>();
-  const [hushed, setHushed] = useState<boolean>(false);
   const [searchValue, setSearchValue] = useState<string>("");
-  const [searchBarFocused, setSearchBarFocused] = useState<boolean>(false);
   const [confirmDialogOpen, setConfirmDialogOpen] = useState<boolean>(false);
   const [searchResults, setSearchResults] = useState<SoundEntity[]>([]);
   const [soundDialogForm, setSoundDialogForm] = useState<
@@ -103,8 +108,13 @@ export const App = () => {
   };
 
   const handleKeyPress = (event: KeyboardEvent) => {
+    const searchBarFocused =
+      document.getElementById("search-bar") === document.activeElement;
+
     if (
-      !hushed &&
+      !searchBarFocused &&
+      !tabDialogForm?.open &&
+      !soundDialogForm?.open &&
       ValidKeys.indexOf(event.key) !== -1 &&
       !event.ctrlKey &&
       !event.altKey &&
@@ -133,19 +143,13 @@ export const App = () => {
 
     if (event.code === "Escape") {
       setConfirmDialogOpen(false);
-      setSearchBarFocused(false);
       setSoundDialogForm({ ...soundDialogForm, open: false });
       setTabDialogForm({ ...tabDialogForm, open: false });
-      setHushed(false);
+      document.getElementById("search-bar")?.blur();
     }
 
-    if (
-      event.key === "/" &&
-      document.getElementById("search-bar") !== document.activeElement
-    ) {
+    if (event.key === "/" && !searchBarFocused) {
       document.getElementById("search-bar")?.focus();
-      setSearchBarFocused(true);
-      setHushed(true);
       event.preventDefault();
     }
   };
@@ -211,9 +215,12 @@ export const App = () => {
     handleTabChange(newActiveTab?.id ?? "");
   };
 
+  const handleOpenConfigDialog = (open: boolean) => {
+    setConfigDialogOpen(open);
+  };
+
   const handleOpenNewTabDialog = (open: boolean) => {
     setTabDialogForm({ ...tabDialogForm, open });
-    setHushed(open);
   };
 
   const handleDeleteSound = async (soundForm: SoundForm) => {
@@ -294,7 +301,6 @@ export const App = () => {
 
   const handleOpenSoundDialog = (open: boolean) => {
     setSoundDialogForm({ ...soundDialogForm, open });
-    setHushed(open);
   };
 
   useEffect(() => {
@@ -302,35 +308,17 @@ export const App = () => {
     return () => document.removeEventListener("keydown", handleKeyPress, false);
   }, [
     activeSound,
-    configDialogOpen,
-    confirmDialogOpen,
-    hushed,
     searchResults,
-    searchBarFocused,
-    soundDialogForm,
     soundList,
-    tabDialogForm,
+    soundDialogForm?.open,
+    tabDialogForm?.open,
     tabsList,
   ]);
-
-  useEffect(() => {
-    if (searchBarFocused) {
-      document.getElementById("search-bar")?.focus();
-      setHushed(true);
-    } else {
-      document.getElementById("search-bar")?.blur();
-      setHushed(false);
-    }
-  }, [searchBarFocused]);
 
   useEffect(() => {
     const index = findIndex(tabsList, ["id", activeTab]);
     setSoundList(() => store.get().tabs[index].sounds || []);
   }, []);
-
-  useEffect(() => {
-    setHushed(searchResults.length > 0);
-  }, [searchResults]);
 
   return (
     <Container>
@@ -352,19 +340,30 @@ export const App = () => {
           soundForm={soundDialogForm}
         />
       )}
-      <SearchBar
-        handleTabChange={handleTabChange}
-        searchValue={searchValue}
-        searchResults={searchResults}
-        setSearchResults={setSearchResults}
-        setSearchValue={setSearchValue}
-        setHushed={setHushed}
-        tabsList={tabsList}
-        playSound={playSound}
-      />
+      {configDialogOpen && (
+        <ConfigDialog
+          setActiveTab={setActiveTab}
+          setSoundList={setSoundList}
+          setTabsList={setTabsList}
+          setDialogOpen={handleOpenConfigDialog}
+        />
+      )}
+
+      <HeaderContainer>
+        <SearchBar
+          handleTabChange={handleTabChange}
+          searchValue={searchValue}
+          searchResults={searchResults}
+          setSearchResults={setSearchResults}
+          setSearchValue={setSearchValue}
+          tabsList={tabsList}
+          playSound={playSound}
+        />
+        <ConfigButton onClick={() => handleOpenConfigDialog(true)} />
+      </HeaderContainer>
       <Filter isActive={searchResults.length > 0}>
         <Columns space={Space.None}>
-          <Column>
+          <Column columnWidth={"18%"}>
             <TabList
               activeTab={activeTab}
               confirmDialogOpen={confirmDialogOpen}
@@ -376,7 +375,7 @@ export const App = () => {
               setTabDialogForm={setTabDialogForm}
             />
           </Column>
-          <Column flexGrow={1}>
+          <Column columnWidth={"82%"}>
             <SoundGrid
               activeSound={activeSound}
               handleOpenSoundDialog={handleOpenSoundDialog}

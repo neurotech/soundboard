@@ -11,8 +11,14 @@ import { copyFileSync, mkdirSync, unlinkSync } from "fs";
 import _case from "case";
 import { Howl } from "howler";
 import { Low, JSONFile } from "lowdb";
-import { Store, storeDefaults } from "../src/utilities/store";
+import {
+  S3Config,
+  s3StoreDefaults,
+  Store,
+  storeDefaults,
+} from "../src/utilities/store";
 import shortUUID from "short-uuid";
+import { backup, restore } from "../src/utilities/s3";
 
 let mainWindow: BrowserWindow | null;
 
@@ -65,13 +71,23 @@ function createWindow() {
 }
 
 async function registerListeners() {
-  const file = join(app.getPath("userData"), "config.json");
-  const adapter = new JSONFile<Store>(file);
-  const store = new Low(adapter);
+  const configFile = join(app.getPath("userData"), "config.json");
+  const s3ConfigFile = join(app.getPath("userData"), "s3.json");
+
+  const configAdapter = new JSONFile<Store>(configFile);
+  const s3Adapter = new JSONFile<S3Config>(s3ConfigFile);
+
+  const store = new Low(configAdapter);
+  const s3Store = new Low(s3Adapter);
+
   await store.read();
+  await s3Store.read();
 
   store.data ||= storeDefaults;
+  s3Store.data ||= s3StoreDefaults;
+
   await store.write();
+  await s3Store.write();
 
   ipcMain.on("getSoundsPath", async (event: IpcMainEvent, filename: string) => {
     event.returnValue = join(app.getPath("userData"), "sounds", filename);
@@ -92,6 +108,40 @@ async function registerListeners() {
     store.data = config;
     await store.write();
     event.returnValue = "ok";
+  });
+
+  ipcMain.on("s3Store-get", async (event: IpcMainEvent) => {
+    await s3Store.read();
+    event.returnValue = s3Store.data;
+  });
+
+  ipcMain.on("s3Store-set", async (event: IpcMainEvent, config: S3Config) => {
+    s3Store.data = config;
+    await s3Store.write();
+    event.returnValue = "ok";
+  });
+
+  ipcMain.handle("s3-backup", async (_event) => {
+    await s3Store.read();
+    const configDirectory = app.getPath("userData");
+    const soundDirectory = join(configDirectory, "sounds");
+
+    if (s3Store.data) {
+      await backup(s3Store.data, configDirectory, soundDirectory);
+    }
+    return "ok";
+  });
+
+  ipcMain.handle("s3-restore", async (_event) => {
+    await s3Store.read();
+    const configDirectory = app.getPath("userData");
+    const soundDirectory = join(configDirectory, "sounds");
+
+    if (s3Store.data) {
+      await restore(s3Store.data, configDirectory, soundDirectory);
+    }
+
+    return "ok";
   });
 
   ipcMain.on(
