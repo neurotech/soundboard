@@ -10,6 +10,7 @@ interface PaletteColor {
 
 export const palette: Record<string, PaletteColor> = {
   blue: {
+    lighter: "#9db5ff",
     light: "#7d9cff",
     default: "#5c83ff",
     dark: "#374f99",
@@ -32,13 +33,15 @@ export const palette: Record<string, PaletteColor> = {
     dim: "#0560294f",
   },
   pink: {
+    lighter: "#ffbef7",
     light: "#ffa4f3",
     default: "#ff7dee",
     dark: "#b358a7",
     dim: "#ff7dee1a",
   },
   purple: {
-    light: "#c4b1ff",
+    lighter: "#d3c5ff",
+    light: "#c1adff",
     default: "#a78aff",
     dark: "#4f3f80",
     dim: "#a78aff1a",

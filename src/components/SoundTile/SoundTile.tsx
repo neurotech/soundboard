@@ -37,7 +37,7 @@ const Tile = styled.button<Pick<SoundTileProps, "color" | "isActive">>`
     getTileShadow({ color: props.color, isActive: props.isActive })};
   color: ${palette.gray.bright};
   font-size: 18px;
-  height: 200px;
+  height: 145px;
   padding: 0.5rem;
   display: flex;
   flex-direction: column;
@@ -66,11 +66,12 @@ const SoundName = styled.div<Pick<SoundTileProps, "color">>`
   color: ${(props) => palette[props.color].default};
   font-weight: 600;
   text-align: left;
+  font-size: 16px;
 `;
 const SoundDescription = styled.div`
   margin-top: 0.25rem;
   font-style: italic;
-  font-size: 80%;
+  font-size: 75%;
   color: #909194;
   flex: 1;
   text-align: left;
@@ -78,8 +79,9 @@ const SoundDescription = styled.div`
 `;
 const SoundShortcutKey = styled.div<Pick<SoundTileProps, "color">>`
   align-self: flex-end;
-  color: ${(props) => palette[props.color].default};
-  font-weight: 600;
+  color: ${(props) => palette[props.color].lighter};
+  font-size: 14px;
+  font-weight: normal;
   text-transform: uppercase;
 `;
 

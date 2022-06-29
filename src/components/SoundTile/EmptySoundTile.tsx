@@ -12,7 +12,7 @@ const Tile = styled.button`
   border: 1px solid ${palette.gray.lighter}80;
   color: ${palette.gray.bright};
   font-size: 18px;
-  height: 200px;
+  height: 145px;
   padding: 0.5rem;
   display: flex;
   flex-direction: column;
@@ -44,6 +44,7 @@ const Tile = styled.button`
 const SoundShortcutKey = styled.div`
   align-self: flex-end;
   color: ${palette.gray.lighter};
+  font-size: 14px;
   font-weight: 700;
   text-shadow: none;
   text-transform: uppercase;
