@@ -154,12 +154,13 @@ export const App = () => {
     }
   };
 
-  const handleTabChange = (id: string) => {
-    const index = findIndex(tabsList, ["id", id]);
-    setSoundList(() => store.get().tabs[index]?.sounds || []);
+  const handleTabChange = async (id: string) => {
+    const currentConfig = await window.Main.store.get();
+    const index = findIndex(currentConfig.tabs, ["id", id]);
+    setSoundList(currentConfig.tabs[index]?.sounds || []);
 
+    store.set({ ...currentConfig, activeTab: id });
     setActiveTab(id);
-    store.set({ ...store.get(), activeTab: id });
   };
 
   const handleSaveTab = async (tabForm: TabForm) => {
@@ -183,6 +184,7 @@ export const App = () => {
 
     await window.Main.store.set({ ...currentConfig, tabs: newTabsList });
     setTabsList(() => newTabsList);
+    setActiveTab(id);
     handleTabChange(tabForm.id || id);
   };
 
@@ -246,7 +248,10 @@ export const App = () => {
   ) => {
     if (updatedSoundForm) {
       const currentConfig = window.Main.store.get();
-      const tabIndex = findIndex(currentConfig.tabs, ["id", activeTab]);
+      const tabIndex = findIndex(currentConfig.tabs, [
+        "id",
+        currentConfig.activeTab,
+      ]);
       const soundListToUpdate = currentConfig.tabs[tabIndex].sounds;
 
       if (updatedSoundForm.id) {
@@ -378,6 +383,7 @@ export const App = () => {
           <Column columnWidth={"82%"}>
             <SoundGrid
               activeSound={activeSound}
+              handleSaveSound={handleSaveSound}
               handleOpenSoundDialog={handleOpenSoundDialog}
               playSound={playSound}
               setSoundDialogForm={setSoundDialogForm}
