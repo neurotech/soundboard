@@ -36,12 +36,7 @@ const Backdrop = styled.div`
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  background: ${palette.gray.dark};
   padding: 1rem;
-  border-radius: 4px;
-  border-width: 2px;
-  border-style: solid;
-  border-color: ${palette.gray.darker};
   margin: 0 auto;
   z-index: 999;
   width: 45%;
