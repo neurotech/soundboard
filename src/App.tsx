@@ -137,6 +137,7 @@ export const App = () => {
     }
 
     if (event.code === "Space") {
+      event.preventDefault();
       player && player.stop();
       setActiveSound(() => "");
     }
