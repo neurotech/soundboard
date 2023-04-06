@@ -1,23 +1,23 @@
-import { useEffect, useState } from "react";
-import { GlobalStyles } from "./styles/GlobalStyle";
+import { Column, Columns, Space } from "@neurotech/elements";
 import { Howl } from "howler";
 import findIndex from "lodash/findIndex";
+import { useEffect, useState } from "react";
+import shortUUID from "short-uuid";
+import styled from "styled-components";
 import { createPlayer } from "./Player";
 import { ValidKeys } from "./ValidKeys";
-import { SoundGrid } from "./components/SoundGrid/SoundGrid";
-import { Column, Columns, Space } from "@neurotech/elements";
-import { TabList } from "./components/TabList/TabList";
-import { SearchBar } from "./components/SearchBar/SearchBar";
-import styled from "styled-components";
-import { TabEntity } from "./utilities/store";
-import { NewTabDialog, TabForm } from "./components/TabList/TabDialog";
-import shortUUID from "short-uuid";
+import { ConfigButton } from "./components/Dialog/ConfigDialog/ConfigButton";
+import { ConfigDialog } from "./components/Dialog/ConfigDialog/ConfigDialog";
 import {
   SoundDialog,
   SoundForm,
 } from "./components/Dialog/SoundDialog/SoundDialog";
-import { ConfigDialog } from "./components/Dialog/ConfigDialog/ConfigDialog";
-import { ConfigButton } from "./components/Dialog/ConfigDialog/ConfigButton";
+import { SearchBar } from "./components/SearchBar/SearchBar";
+import { SoundGrid } from "./components/SoundGrid/SoundGrid";
+import { NewTabDialog, TabForm } from "./components/TabList/TabDialog";
+import { TabList } from "./components/TabList/TabList";
+import { GlobalStyles } from "./styles/GlobalStyle";
+import { TabEntity } from "./utilities/store";
 
 export const ColorKeys = [
   "red",
