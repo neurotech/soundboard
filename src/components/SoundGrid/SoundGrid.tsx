@@ -5,14 +5,15 @@ import {
   Space,
   Stack,
 } from "@neurotech/elements";
+import chunk from "lodash.chunk";
+import { useEffect } from "react";
 import { SoundEntity } from "../../App";
 import { ValidKeys } from "../../ValidKeys";
-import { SoundTile } from "../SoundTile/SoundTile";
-import chunk from "lodash.chunk";
-import { EmptySoundTile } from "../SoundTile/EmptySoundTile";
-import { Panel } from "../Panel/Panel";
+import { TabEntity } from "../../utilities/store";
 import { SoundForm } from "../Dialog/SoundDialog/SoundDialog";
-import { useEffect } from "react";
+import { Panel } from "../Panel/Panel";
+import { EmptySoundTile } from "../SoundTile/EmptySoundTile";
+import { SoundTile } from "../SoundTile/SoundTile";
 
 interface SoundGridProps {
   activeSound: string;
@@ -32,6 +33,12 @@ export const SoundGrid = ({
   setSoundDialogForm,
   sounds,
 }: SoundGridProps) => {
+  const store = window.Main.store;
+  const tabsList: TabEntity[] = store.get().tabs;
+  const activeTabName = tabsList.find(
+    (tab: TabEntity) => tab.id === store.get().activeTab
+  )?.name;
+
   const paginated = chunk(ValidKeys, 6);
   const renderTile = (
     itemIndex: number,
@@ -89,6 +96,7 @@ export const SoundGrid = ({
             open: false,
             color: "red",
             name: readableName,
+            description: activeTabName,
             path: e.dataTransfer.files[i].path,
             shortcutKey: ValidKeys[i],
           });
