@@ -128,8 +128,8 @@ async function registerListeners() {
 
     if (s3Store.data) {
       await backup(s3Store.data, configDirectory, soundDirectory);
+      return "ok";
     }
-    return "ok";
   });
 
   ipcMain.handle("s3-restore", async (_event) => {
@@ -138,10 +138,10 @@ async function registerListeners() {
     const soundDirectory = join(configDirectory, "sounds");
 
     if (s3Store.data) {
-      await restore(s3Store.data, configDirectory, soundDirectory);
+      await restore(s3Store.data, configDirectory, soundDirectory).then(() => {
+        return "ok";
+      });
     }
-
-    return "ok";
   });
 
   ipcMain.on(

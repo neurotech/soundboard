@@ -75,7 +75,7 @@ const upload = async (
       )
     );
 
-    done.then(() => {}).catch(() => {});
+    return done;
   } catch (error) {
     console.error(error);
   }
@@ -153,6 +153,10 @@ export const restore = async (
                 join(configDirectory, param.Key)
               );
               body.pipe(fileStream);
+
+              fileStream.on("finish", () =>
+                console.log("Restored: " + param.Key)
+              );
             }
           })
           .catch((error) => {
@@ -161,10 +165,6 @@ export const restore = async (
       )
     );
 
-    await downloadOperation
-      .then(() => {})
-      .catch((error) => {
-        console.error(error);
-      });
+    return downloadOperation;
   }
 };
