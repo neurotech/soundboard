@@ -108,13 +108,13 @@ export const App = () => {
   };
 
   const handleKeyPress = (event: KeyboardEvent) => {
+    if (tabDialogForm?.open || soundDialogForm?.open) return;
+
     const searchBarFocused =
       document.getElementById("search-bar") === document.activeElement;
 
     if (
       !searchBarFocused &&
-      !tabDialogForm?.open &&
-      !soundDialogForm?.open &&
       ValidKeys.indexOf(event.key) !== -1 &&
       !event.ctrlKey &&
       !event.altKey &&
@@ -224,6 +224,29 @@ export const App = () => {
 
   const handleOpenNewTabDialog = (open: boolean) => {
     setTabDialogForm({ ...tabDialogForm, open });
+  };
+
+  const handleTabOrder = async (id: string, moveUp: boolean) => {
+    const currentConfig = window.Main.store.get();
+    const updatedTabs = [...tabsList];
+    const tabToMove = updatedTabs.find((tab) => tab.id === id);
+
+    if (tabToMove) {
+      const fromIndex = updatedTabs.findIndex((tab) => tab === tabToMove);
+
+      if (moveUp) {
+        const toIndex = fromIndex === 0 ? tabsList.length - 1 : fromIndex - 1;
+        updatedTabs.splice(fromIndex, 1);
+        updatedTabs.splice(toIndex, 0, tabToMove);
+      } else {
+        const toIndex = fromIndex === tabsList.length - 1 ? 0 : fromIndex + 1;
+        updatedTabs.splice(fromIndex, 1);
+        updatedTabs.splice(toIndex, 0, tabToMove);
+      }
+    }
+
+    await window.Main.store.set({ ...currentConfig, tabs: updatedTabs });
+    setTabsList(updatedTabs);
   };
 
   const handleDeleteSound = async (soundForm: SoundForm) => {
@@ -377,6 +400,7 @@ export const App = () => {
               handleDeleteTab={handleDeleteTab}
               handleOpenNewTabDialog={handleOpenNewTabDialog}
               handleTabChange={handleTabChange}
+              handleTabOrder={handleTabOrder}
               tabsList={tabsList}
               setTabDialogForm={setTabDialogForm}
             />
