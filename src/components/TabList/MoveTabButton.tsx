@@ -1,12 +1,13 @@
 import styled from "styled-components";
 import { palette } from "../../styles/palette";
-import { Trash } from "../Icons/Trash";
+import { ReactNode } from "react";
 
-interface DeleteTabButtonProps {
+interface MoveTabButtonProps {
+  children: string | ReactNode;
   onClick: () => void;
 }
 
-const DeleteButton = styled.div`
+const MoveButton = styled.div`
   background-color: ${palette.gray.light};
   border: 1px solid ${palette.gray.darker};
   border-radius: 4px;
@@ -18,18 +19,16 @@ const DeleteButton = styled.div`
   font-size: 12px;
 
   :hover {
-    background-color: ${palette.red.default};
+    background-color: ${palette.yellow.default};
     box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.5);
   }
 
   :active {
-    background-color: ${palette.red.dark};
+    background-color: ${palette.yellow.dark};
     box-shadow: inset 0 1px 0 0 rgba(0, 0, 0, 0.33);
   }
 `;
 
-export const DeleteTabButton = ({ onClick }: DeleteTabButtonProps) => (
-  <DeleteButton onClick={onClick}>
-    <Trash iconSize={1} />
-  </DeleteButton>
+export const MoveTabButton = ({ children, onClick }: MoveTabButtonProps) => (
+  <MoveButton onClick={onClick}>{children}</MoveButton>
 );

@@ -7,6 +7,7 @@ import { DeleteTabButton } from "./DeleteTabButton";
 import { AddTabButton } from "./NewTabButton";
 import { TabForm } from "./TabDialog";
 import { TabButton } from "./TabButton";
+import { MoveTabButton } from "./MoveTabButton";
 
 interface TabListProps {
   activeTab: string;
@@ -14,6 +15,7 @@ interface TabListProps {
   handleDeleteTab: (id: string) => void;
   handleOpenNewTabDialog: (open: boolean) => void;
   handleTabChange: (id: string) => void;
+  handleTabOrder: (id: string, moveUp: boolean) => void;
   setConfirmDialogOpen: (open: boolean) => void;
   setTabDialogForm: (tabForm: TabForm) => void;
   tabsList: TabEntity[];
@@ -41,12 +43,18 @@ const Tabs = styled.div`
   }
 `;
 
+const ButtonsContainer = styled.div`
+  display: none;
+  gap: 4px;
+`;
+
 export const TabList = ({
   activeTab,
   confirmDialogOpen,
   handleDeleteTab,
   handleOpenNewTabDialog,
   handleTabChange,
+  handleTabOrder,
   setConfirmDialogOpen,
   setTabDialogForm,
   tabsList,
@@ -78,16 +86,25 @@ export const TabList = ({
               }}
             >
               {tab.name}
-              <DeleteTabButton
-                onClick={() => {
-                  handleTabChange(activeTab);
-                  setTabToDelete(tab);
-                  setConfirmDialogOpen(true);
-                }}
-              />
+              <ButtonsContainer>
+                <MoveTabButton onClick={() => handleTabOrder(tab.id, true)}>
+                  ⬆️
+                </MoveTabButton>
+                <MoveTabButton onClick={() => handleTabOrder(tab.id, false)}>
+                  ⬇️
+                </MoveTabButton>
+                <DeleteTabButton
+                  onClick={() => {
+                    handleTabChange(activeTab);
+                    setTabToDelete(tab);
+                    setConfirmDialogOpen(true);
+                  }}
+                />
+              </ButtonsContainer>
             </TabButton>
           ))}
         </Tabs>
+
         <AddTabButton
           onClick={() => {
             handleOpenNewTabDialog(true);
