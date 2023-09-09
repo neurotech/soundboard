@@ -117,7 +117,9 @@ export const backup = async (
       console.warn("There are no files to clear from the S3 bucket.");
     }
 
-    await upload(config, configDirectory, soundsDirectory);
+    await upload(config, configDirectory, soundsDirectory).then(() =>
+      console.log("backup done")
+    );
   } catch (error) {
     console.error(error);
   }

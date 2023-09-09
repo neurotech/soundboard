@@ -127,7 +127,19 @@ async function registerListeners() {
     const soundDirectory = join(configDirectory, "sounds");
 
     if (s3Store.data) {
+      await store.read();
+
+      if (store.data) {
+        const existingConfig = store.data;
+        store.data = {
+          ...existingConfig,
+          lastBackupDate: new Date().toISOString(),
+        };
+        await store.write();
+      }
+
       await backup(s3Store.data, configDirectory, soundDirectory);
+
       return "ok";
     }
   });

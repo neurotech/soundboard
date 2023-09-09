@@ -17,6 +17,7 @@
   "dependencies": {
     "aws-crt": "^1.12.5",
     "case": "^1.6.3",
+    "date-fns": "^2.30.0",
     "howler": "^2.2.3",
     "lodash.chunk": "^4.2.0",
     "lodash.findindex": "^4.6.0",

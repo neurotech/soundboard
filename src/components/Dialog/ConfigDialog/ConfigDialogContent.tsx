@@ -4,6 +4,7 @@ import { Status } from "../../../utilities/s3";
 import { S3Config } from "../../../utilities/store";
 import { Input } from "../../Input";
 import { HorizontalRule } from "../Dialog";
+import format from "date-fns/format";
 
 interface ConfigDialogContentProps {
   s3config: S3Config;
@@ -27,6 +28,7 @@ export const ConfigDialogContent = ({
   s3config,
   setS3config,
 }: ConfigDialogContentProps) => {
+  const config = window.Main.store.get();
   const [s3Status, setS3Status] = useState<Status>("idle");
 
   return (
@@ -72,27 +74,49 @@ export const ConfigDialogContent = ({
         </Column>
       </Columns>
       <HorizontalRule />
-      <Stack>
-        <button
-          onClick={async () => {
-            setS3Status("uploading");
-            await window.Main.s3Backup();
-            setS3Status("backup-success");
-          }}
-        >
-          {"Backup"}
-        </button>
-        <button
-          onClick={async () => {
-            setS3Status("downloading");
-            await window.Main.s3Restore();
-            setS3Status("restore-success");
-          }}
-        >
-          {"Restore"}
-        </button>
-        {messages[s3Status]}
-      </Stack>
+      <Columns>
+        <Column columnWidth={"50%"}>
+          <Stack flexGrow={1}>
+            <Columns>
+              <Column columnWidth={"50%"}>
+                <button
+                  onClick={async () => {
+                    setS3Status("uploading");
+                    await window.Main.s3Backup();
+                    setS3Status("backup-success");
+                  }}
+                >
+                  {"Backup"}
+                </button>
+              </Column>
+              <Column columnWidth={"50%"}>
+                <button
+                  onClick={async () => {
+                    setS3Status("downloading");
+                    await window.Main.s3Restore();
+                    setS3Status("restore-success");
+                  }}
+                >
+                  {"Restore"}
+                </button>
+              </Column>
+            </Columns>
+
+            {messages[s3Status]}
+          </Stack>
+        </Column>
+        <Column columnWidth={"50%"}>
+          <Stack flexGrow={1}>
+            {"Last Backup:"}
+            {config.lastBackupDate
+              ? `${format(
+                  new Date(config.lastBackupDate),
+                  "Mo MMMM RRRR 'at' h:mm a"
+                )}`
+              : "None"}
+          </Stack>
+        </Column>
+      </Columns>
     </Stack>
   );
 };

@@ -14,6 +14,7 @@ export interface Store {
   rate: number;
   tabs: TabEntity[];
   volume: number;
+  lastBackupDate?: string;
 }
 
 export interface S3Config {
