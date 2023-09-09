@@ -43,14 +43,21 @@ const ResultName = styled.div<{ color: Color; isActive: boolean }>`
     props.isActive ? "white" : palette[props.color].default};
   font-size: 18px;
   font-weight: 500;
-  line-height: 0;
+  line-height: 24px;
   text-shadow: 1px 1px 0 black;
   width: 30%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 const ResultDescription = styled.div<{ color: Color }>`
   font-size: 18px;
   text-align: center;
+  line-height: 24px;
   width: 30%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 
 const ResultTabName = styled.div`
